@@ -15,14 +15,10 @@ if __name__ == '__main__':
         start_range = int(input("Введите начало диапазона целых чисел: "))
         final_range = int(input("Введите конец диапазона целых чисел: "))
 
-        lst = [[randint(start_range, final_range) for i in range(strings)] for i in range(columns)]
+        lst = [[randint(start_range, final_range) for i in range(strings)] for j in range(columns)]
         for i in lst:
             print()
             for j in i:
                 print(j, end=" ")
     except ValueError:
         print("Ошибка, повторите снова!")
-    else:
-        print("\nВыполняется, если не было ошибок!")
-    finally:
-        print("Выполняется всегда!")
