@@ -11,8 +11,6 @@ import xml.etree.ElementTree as ET
 #   даты и времени выполнения пользовательской команды с точностью до миллисекунды.
 
 
-# Класс пользовательского исключения в случае, если неверно
-# введен номер года.
 class IllegalMarksError(Exception):
 
     def __init__(self, marks, message="Illegal year number"):
@@ -87,7 +85,7 @@ class Staff:
         )
         table.append(line)
 
-        # Вывести данные о всех сотрудниках.
+        # Вывести данные о всех оценках ученика.
         for idx, person in enumerate(self.students, 1):
             table.append(
                 '| {:>3} | {:<30} | {:<20} | {:>11} | {:>11} | {:>11} | {:>11} | {:>11} |'.format(
@@ -106,7 +104,7 @@ class Staff:
         return '\n'.join(table)
 
     def select(self, period):
-        # Получить текущую дату.
+        # Получить данные студентов, которые получили оценку 2.
         parts = command.split(' ', maxsplit=2)
         period = int(parts[1])
         result = []
@@ -157,6 +155,8 @@ class Staff:
             group_element.text = person.group
 
             marks_element = ET.SubElement(person_element, 'marks')
+
+            # Преобразование списка к строке
             mark = ''.join(str(i) for i in marks)
             marks_element.text = str(mark)
 
@@ -169,12 +169,13 @@ class Staff:
 
 if __name__ == '__main__':
     # Выполнить настройку логгера.
+    # Выполнение пользовательской команды с точностью до миллисекунды.
     logging.basicConfig(
         filename='students_2_individ.log',
         format='[%(asctime)s] [%(levelname)s] => %(message)s',
         level=logging.INFO
     )
-    # Список работников.
+    # Список учеников.
     staff = Staff()
 
     # Организовать бесконечный цикл запроса команд.
@@ -188,12 +189,12 @@ if __name__ == '__main__':
                 break
 
             elif command == 'add':
-                # Запросить данные о работнике.
+                # Запросить данные об учениках.
                 n = 5
                 name = input("Введите фамилию и имя: ")
                 group = input("Введите группу: ")
                 marks = list(map(int, input("Введите пять оценок студента, в формате - x y z: ").split(None, n)[:n]))
-                # Добавить работника.
+                # Добавить учеников.
                 staff.add(name, group, marks)
                 logging.info(
                     f"Добавлен студент: {name}, {group}, "
@@ -206,9 +207,8 @@ if __name__ == '__main__':
                 logging.info("Отображен список студентов.")
 
             elif command.startswith('select '):
-                # Разбить команду на части для выделения номера года.
                 parts = command.split(maxsplit=1)
-                # Запросить работников.
+                # Запросить учеников.
                 selected = staff.select(parts[1])
                 # Вывести результаты запроса.
                 if selected:
